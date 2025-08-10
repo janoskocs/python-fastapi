@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 from typing import List
 from models import TodoItem
 
@@ -15,7 +15,7 @@ def read_root():
 def get_todos():
     return todos
 
-@app.post("/todos", response_model=TodoItem)
+@app.post("/todos", response_model=TodoItem, status_code=status.HTTP_201_CREATED)
 def create_todo(todo: TodoItem):
     global current_id
     todo.id = current_id
@@ -36,5 +36,5 @@ def delete_todo(todo_id: int):
     for idx, todo in enumerate(todos):
         if todo.id == todo_id:
             todos.pop(idx)
-            return {"details": "Todo deleted."}
+            return {"detail": "Todo deleted."}
     raise HTTPException(status_code=404, detail="Todo doesn't exist.")
